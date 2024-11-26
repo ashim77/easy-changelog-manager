@@ -9,7 +9,6 @@ jQuery(document).ready(function($) {
         
         // Replace index placeholder
         template = template.replace(/{{INDEX}}/g, index);
-        // template = template.replace('value=""', 'value="' + currentDate + '"');
         
         $('#versions-list').append(template);
     });

@@ -23,13 +23,13 @@ class EasyChangeLogManager {
     }
 
     public function register_changelog_post_type() {
-        register_post_type('product_changelog', [
+        register_post_type('easy_changelog', [
             'labels' => [
-                'name' => __('Product Changelogs', 'easy-change-log-manager'),
-                'singular_name' => __('Product Changelog', 'easy-change-log-manager'),
+                'name' => __('Easy Changelogs', 'easy-change-log-manager'),
+                'singular_name' => __('Easy Changelog', 'easy-change-log-manager'),
                 'add_new' => __('Add New Changelog', 'easy-change-log-manager'),
-                'add_new_item' => __('Add New Product Changelog', 'easy-change-log-manager'),
-                'edit_item' => __('Edit Product Changelog', 'easy-change-log-manager')
+                'add_new_item' => __('Add New Easy Changelog', 'easy-change-log-manager'),
+                'edit_item' => __('Edit Easy Changelog', 'easy-change-log-manager')
             ],
             'public' => true,
             'has_archive' => true,
@@ -43,7 +43,7 @@ class EasyChangeLogManager {
             'changelog_versions',
             'Changelog Versions',
             [$this, 'changelog_versions_callback'],
-            'product_changelog',
+            'easy_changelog',
             'normal',
             'high'
         );
@@ -51,7 +51,7 @@ class EasyChangeLogManager {
 
     public function enqueue_changelog_scripts($hook) {
         $screen = get_current_screen();
-        if ($screen->post_type === 'product_changelog' && 
+        if ($screen->post_type === 'easy_changelog' && 
             (in_array($hook, ['post.php', 'post-new.php']))) {
             wp_enqueue_script('jquery');
             wp_enqueue_script('easy-changelog-script', plugin_dir_url(__FILE__) . 'assets/js/changelog-script.js', ['jquery'], '1.1.0', true);
@@ -182,7 +182,7 @@ class EasyChangeLogManager {
         }
     
         // Check post type
-        if ($post->post_type !== 'product_changelog') {
+        if ($post->post_type !== 'easy_changelog') {
             return;
         }
     
@@ -239,7 +239,7 @@ class EasyChangeLogManager {
 
     public function render_full_changelog($atts) {
         $args = [
-            'post_type' => 'product_changelog',
+            'post_type' => 'easy_changelog',
             'posts_per_page' => -1,
             'orderby' => 'date',
             'order' => 'DESC'
@@ -251,7 +251,7 @@ class EasyChangeLogManager {
             while ($query->have_posts()) {
                 $query->the_post();
                 
-                $output .= '<div class="product-changelog">';
+                $output .= '<div class="easy-changelog">';
                 $output .= '<h1 class="changelog-title">' . get_the_title() . '</h1>';
                 
                 // Display main content if any
@@ -303,7 +303,7 @@ class EasyChangeLogManager {
                     $output .= '</div>'; // End changelog-versions
                 }
                 
-                $output .= '</div>'; // End product-changelog
+                $output .= '</div>'; // End easy-changelog
             }
             wp_reset_postdata();
         }
@@ -314,7 +314,7 @@ class EasyChangeLogManager {
 
     public function add_changelog_settings_page() {
         add_submenu_page(
-            'edit.php?post_type=product_changelog', 
+            'edit.php?post_type=easy_changelog', 
             'Changelog Styling', 
             'Styling Options', 
             'manage_options', 
