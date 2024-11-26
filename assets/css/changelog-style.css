@@ -1,0 +1,68 @@
+.changelog-version-entry {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.version-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.version-number-input {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.version-details {
+    margin-bottom: 15px;
+}
+
+.version-details textarea,
+.version-details input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.changelog-entries-container {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+.changelog-entry {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.changelog-entry select {
+    margin-right: 10px;
+    width: 120px;
+}
+
+.changelog-entry input {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.add-changelog-entry {
+    margin-top: 10px;
+}
+
+.remove-version-entry,
+.remove-changelog-entry {
+    background-color: #dc3545;
+    color: white;
+}
+
+.version-date {
+    color: #6c757d;
+    font-size: 0.8em;
+    font-weight: normal;
+}
