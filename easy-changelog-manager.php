@@ -25,11 +25,11 @@ class EasyChangeLogManager {
     public function register_changelog_post_type() {
         register_post_type('easy_changelog', [
             'labels' => [
-                'name' => __('Easy Changelogs', 'easy-change-log-manager'),
-                'singular_name' => __('Easy Changelog', 'easy-change-log-manager'),
-                'add_new' => __('Add New Changelog', 'easy-change-log-manager'),
-                'add_new_item' => __('Add New Easy Changelog', 'easy-change-log-manager'),
-                'edit_item' => __('Edit Easy Changelog', 'easy-change-log-manager')
+                'name' => esc_html__('Easy Changelogs', 'easy-change-log-manager'),
+                'singular_name' => esc_html__('Easy Changelog', 'easy-change-log-manager'),
+                'add_new' => esc_html__('Add New Changelog', 'easy-change-log-manager'),
+                'add_new_item' => esc_html__('Add New Easy Changelog', 'easy-change-log-manager'),
+                'edit_item' => esc_html__('Edit Easy Changelog', 'easy-change-log-manager')
             ],
             'public' => true,
             'has_archive' => true,
@@ -41,7 +41,7 @@ class EasyChangeLogManager {
     public function add_changelog_version_meta_boxes() {
         add_meta_box(
             'changelog_versions',
-            'Changelog Versions',
+            esc_html__('Changelog Versions', 'easy-change-log-manager'),
             [$this, 'changelog_versions_callback'],
             'easy_changelog',
             'normal',
@@ -54,8 +54,15 @@ class EasyChangeLogManager {
         if ($screen->post_type === 'easy_changelog' && 
             (in_array($hook, ['post.php', 'post-new.php']))) {
             wp_enqueue_script('jquery');
-            wp_enqueue_script('easy-changelog-script', plugin_dir_url(__FILE__) . 'assets/js/changelog-script.js', ['jquery'], '1.1.0', true);
-            wp_enqueue_style('easy-changelog-style', plugin_dir_url(__FILE__) . 'assets/css/changelog-style.css');
+            wp_enqueue_script('easy-changelog-script', 
+                esc_url(plugin_dir_url(__FILE__) . 'assets/js/changelog-script.js'), 
+                ['jquery'], 
+                '1.1.0', 
+                true
+            );
+            wp_enqueue_style('easy-changelog-style', 
+                esc_url(plugin_dir_url(__FILE__) . 'assets/css/changelog-style.css')
+            );
         }
     }
 
@@ -73,8 +80,8 @@ class EasyChangeLogManager {
                 }
                 ?>
             </div>
-            <button type="button" id="add-changelog-version" class="button button-primary">
-                <?php echo esc_html__('Add New Version', 'easy-change-log-manager'); ?>
+            <button type="button" id="add-changelog-release" class="button button-primary">
+                <?php echo esc_html__('Add New Release', 'easy-change-log-manager'); ?>
             </button>
         </div>
 
@@ -90,37 +97,39 @@ class EasyChangeLogManager {
         $release_note = $version ? esc_textarea($version['release_note']) : '';
         $release_url = $version ? esc_url($version['release_url']) : '';
         ?>
-        <div class="changelog-version-entry" data-index="<?php echo $index; ?>">
+        <div class="changelog-version-entry" data-index="<?php echo esc_attr($index); ?>">
             <div class="version-header">
                 <input 
                     type="text" 
-                    name="changelog_version_number[<?php echo $index; ?>]" 
-                    placeholder="Version Number (e.g., 1.0.1)" 
-                    value="<?php echo $version_number; ?>"
+                    name="changelog_version_number[<?php echo esc_attr($index); ?>]" 
+                    placeholder="<?php echo esc_attr__('Version Number (e.g., 1.0.1)', 'easy-change-log-manager'); ?>" 
+                    value="<?php echo esc_attr($version_number); ?>"
                     class="version-number-input"
                 >
                 <input 
                     type="date" 
-                    name="changelog_release_date[<?php echo $index; ?>]" 
-                    value="<?php echo $release_date; ?>"
+                    name="changelog_release_date[<?php echo esc_attr($index); ?>]" 
+                    value="<?php echo esc_attr($release_date); ?>"
                     class="version-date-input"
                     required
                 >
-                <button type="button" class="remove-version-entry button">Remove Version</button>
+                <button type="button" class="remove-version-entry button">
+                    <?php echo esc_html__('Remove Version', 'easy-change-log-manager'); ?>
+                </button>
             </div>
                 
             <div class="version-details">
                 <textarea 
-                    name="changelog_release_note[<?php echo $index; ?>]" 
-                    placeholder="Optional Release Notes (Supports Markdown)" 
+                    name="changelog_release_note[<?php echo esc_attr($index); ?>]" 
+                    placeholder="<?php echo esc_attr__('Optional Release Notes (Supports Markdown)', 'easy-change-log-manager'); ?>" 
                     rows="3"
-                ><?php echo $release_note; ?></textarea>
+                ><?php echo esc_textarea($release_note); ?></textarea>
                 
                 <input 
                     type="url" 
-                    name="changelog_release_url[<?php echo $index; ?>]" 
-                    placeholder="Optional Release URL" 
-                    value="<?php echo $release_url; ?>"
+                    name="changelog_release_url[<?php echo esc_attr($index); ?>]" 
+                    placeholder="<?php echo esc_attr__('Optional Release URL', 'easy-change-log-manager'); ?>" 
+                    value="<?php echo esc_url($release_url); ?>"
                 >
             </div>
                 
@@ -135,9 +144,9 @@ class EasyChangeLogManager {
                 <button 
                     type="button" 
                     class="add-changelog-entry button" 
-                    data-version-index="<?php echo $index; ?>"
+                    data-version-index="<?php echo esc_attr($index); ?>"
                 >
-                    Add Changelog Entry
+                    <?php echo esc_html__('Add Changelog Entry', 'easy-change-log-manager'); ?>
                 </button>
             </div>
         </div>
@@ -148,25 +157,28 @@ class EasyChangeLogManager {
         $entry_type = $entry ? esc_attr($entry['type']) : 'Added';
         $entry_description = $entry ? esc_attr($entry['description']) : '';
         ?>
-        <div class="changelog-entry" data-version-index="<?php echo $version_index; ?>">
-            <select name="changelog_type[<?php echo $version_index; ?>][]">
-                <option value="Added" <?php selected($entry_type, 'Added'); ?>>Added</option>
-                <option value="Fixed" <?php selected($entry_type, 'Fixed'); ?>>Fixed</option>
-                <option value="Changed" <?php selected($entry_type, 'Changed'); ?>>Changed</option>
-                <option value="Deprecated" <?php selected($entry_type, 'Deprecated'); ?>>Deprecated</option>
-                <option value="Removed" <?php selected($entry_type, 'Removed'); ?>>Removed</option>
-                <option value="Security" <?php selected($entry_type, 'Security'); ?>>Security</option>
+        <div class="changelog-entry" data-version-index="<?php echo esc_attr($version_index); ?>">
+            <select name="changelog_type[<?php echo esc_attr($version_index); ?>][]">
+                <option value="Added" <?php selected($entry_type, 'Added'); ?>><?php echo esc_html__('Added', 'easy-change-log-manager'); ?></option>
+                <option value="Fixed" <?php selected($entry_type, 'Fixed'); ?>><?php echo esc_html__('Fixed', 'easy-change-log-manager'); ?></option>
+                <option value="Changed" <?php selected($entry_type, 'Changed'); ?>><?php echo esc_html__('Changed', 'easy-change-log-manager'); ?></option>
+                <option value="Deprecated" <?php selected($entry_type, 'Deprecated'); ?>><?php echo esc_html__('Deprecated', 'easy-change-log-manager'); ?></option>
+                <option value="Removed" <?php selected($entry_type, 'Removed'); ?>><?php echo esc_html__('Removed', 'easy-change-log-manager'); ?></option>
+                <option value="Security" <?php selected($entry_type, 'Security'); ?>><?php echo esc_html__('Security', 'easy-change-log-manager'); ?></option>
             </select>
             <input 
                 type="text" 
-                name="changelog_description[<?php echo $version_index; ?>][]" 
-                placeholder="Enter changelog description" 
-                value="<?php echo $entry_description; ?>"
+                name="changelog_description[<?php echo esc_attr($version_index); ?>][]" 
+                placeholder="<?php echo esc_attr__('Enter changelog description', 'easy-change-log-manager'); ?>" 
+                value="<?php echo esc_attr($entry_description); ?>"
             >
-            <button type="button" class="remove-changelog-entry button">Remove</button>
+            <button type="button" class="remove-changelog-entry button">
+                <?php echo esc_html__('Remove Log', 'easy-change-log-manager'); ?>
+            </button>
         </div>
         <?php
     }
+
 
     public function save_changelog_version_entries($post_id, $post) {
 
@@ -252,7 +264,7 @@ class EasyChangeLogManager {
                 $query->the_post();
                 
                 $output .= '<div class="easy-changelog">';
-                $output .= '<h1 class="changelog-title">' . get_the_title() . '</h1>';
+                // $output .= '<h1 class="changelog-title">' . get_the_title() . '</h1>';
                 
                 // Display main content if any
                 $content = get_the_content();

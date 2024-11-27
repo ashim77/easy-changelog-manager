@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
     // Add new version entry
-    $('#add-changelog-version').on('click', function() {
+    $('#add-changelog-release').on('click', function() {
         var template = $('#version-entry-template').html();
         var index = $('#versions-list .changelog-version-entry').length;
 
@@ -11,11 +11,6 @@ jQuery(document).ready(function($) {
         template = template.replace(/{{INDEX}}/g, index);
         
         $('#versions-list').append(template);
-    });
-
-    // Remove version entry
-    $(document).on('click', '.remove-version-entry', function() {
-        $(this).closest('.changelog-version-entry').remove();
     });
 
     // Add changelog entry to a specific version
@@ -43,8 +38,21 @@ jQuery(document).ready(function($) {
         $(this).before(entryTemplate);
     });
 
-    // Remove changelog entry
-    $(document).on('click', '.remove-changelog-entry', function() {
+// Remove changelog entry
+$(document).on('click', '.remove-changelog-entry', function(e) {
+    e.preventDefault(); // Prevent any default action, if necessary
+    if (confirm('Are you sure you want to delete this log?')) {
         $(this).closest('.changelog-entry').remove();
-    });
+    }
+});
+
+// Remove version entry
+$(document).on('click', '.remove-version-entry', function(e) {
+    e.preventDefault(); // Prevent any default action, if necessary
+    if (confirm('Are you sure you want to delete this version log entry?')) {
+        $(this).closest('.changelog-version-entry').remove();
+    }
+});
+
+
 });
